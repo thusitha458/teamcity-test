@@ -1,0 +1,13 @@
+version: '3'
+services:
+  brp_mock_api:
+    image: thusitha458/teamcity-test
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SERVER_HOST=brp-mock-api.rootcode.software
+      - USE_PROTOCOL_WHEN_CANNOT_DECIDE=https
+    ports:
+      - '4141:8080'
