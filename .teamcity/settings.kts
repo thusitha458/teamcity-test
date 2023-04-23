@@ -111,16 +111,10 @@ object GitTags : BuildType({
                     
                     var buildNumber = "01"
                     if (!tagsWithSameVersionPrefix.isNullOrEmpty()) {
-                        val temp = tagsWithSameVersionPrefix
-                            .map { it.replace(versionPrefix, "").toIntOrNull() }
-                            .filterNotNull()
-                            .maxOrNull()
-                        println(temp)
-                    
                         val lastBuildNumber = tagsWithSameVersionPrefix
                             .map { it.replace(versionPrefix, "").toIntOrNull() }
-                            .filter { it != null }
-                            .first() ?: 0
+                            .filterNotNull()
+                            .maxOrNull() ?: 0
                         buildNumber = (lastBuildNumber + 1).toString()
                         if (buildNumber.length == 1) {
                             buildNumber = "0" + buildNumber
