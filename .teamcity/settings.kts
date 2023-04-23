@@ -76,6 +76,8 @@ object GitTags : BuildType({
                         println(response.body!!.string())
                     }
                 }
+                
+                run()
             """.trimIndent()
         }
     }
