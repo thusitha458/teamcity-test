@@ -113,7 +113,7 @@ object GitTags : BuildType({
                     if (!tagsWithSameVersionPrefix.isNullOrEmpty()) {
                         val temp = ((tagsWithSameVersionPrefix
                             .map { it.replace(versionPrefix, "").toIntOrNull() }
-                            .filter { it != null && it is Int }) as? List<Int>)
+                            .filter { it != null && it is Int }) as List<Int>)
                             .maxOrNull()
                         println(temp)
                     
