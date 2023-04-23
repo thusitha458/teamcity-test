@@ -1,6 +1,8 @@
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
 import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
@@ -92,10 +94,16 @@ object GitTags : BuildType({
         }
 
         kotlinScript {
+            fun getVal (): Result<String, FuelError> {
+                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString()
+                return result
+            }
+
+            val res = getVal()
+
             name = "Kotlin script"
             content = """
-                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString()
-                print(result)
+                print(${res.get()})
             """.trimIndent()
         }
     }
