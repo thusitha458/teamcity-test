@@ -78,7 +78,23 @@ object GitTags : BuildType({
                     val ref: String
                 )
                 
-                fun getVersion(): String {
+                fun getTagsFromGithub(): List<GithubTag> {
+                    val request = Request.Builder()
+                        .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
+                        .header("X-GitHub-Api-Version", "2022-11-28")
+                        .header("Authorization", "Bearer ${'$'}githubToken")
+                        .build()
+                    
+                    return client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
+                        
+                        return gson
+                            .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
+                            .toList()
+                    }
+                }
+                
+                fun getVersionSuffix(): String {
                     val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
                     cal.setTime(Date())
                     val year = cal.get(Calendar.YEAR)
@@ -87,25 +103,11 @@ object GitTags : BuildType({
                 }
                 
                 fun run() {
-                    val request = Request.Builder()
-                        .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
-                        .header("X-GitHub-Api-Version", "2022-11-28")
-                        .header("Authorization", "Bearer ${'$'}githubToken")
-                        .build()
-                    
-                    client.newCall(request).execute().use { response ->
-                        if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
-                        
-                        val tags: List<String> = gson
-                            .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
-                            .toList()
-                            .map {
-                                it.ref.replace("refs/tags/", "")
-                            }
-                        
-                        println(tags[0])
-                        println(getVersion())
+                    val versionSuffix = getVersionSuffix()
+                    val tags = getTagsFromGithub().map {
+                        it.ref.replace("refs/tags/", "")
                     }
+                    println(tags)
                 }
                 
                 run()
