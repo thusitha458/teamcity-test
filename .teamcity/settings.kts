@@ -114,10 +114,10 @@ object GitTags : BuildType({
                         var lastBuildNumber = tagsWithSameVersionSuffix
                             .map { it.replace(versionSuffix, "").toIntOrNull() }
                             .filter { it != null }
-                            .max() ?: 0
+                            .first() ?: 0
                         buildNumber = (lastBuildNumber++).toString()
                         if (buildNumber.length == 1) {
-                            buildNumber += "0"
+                            buildNumber = "0" + buildNumber
                         }
                     }
                     
