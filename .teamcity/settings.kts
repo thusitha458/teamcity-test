@@ -1,5 +1,6 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
+import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -55,6 +56,14 @@ object GitTags : BuildType({
                                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
             """.trimIndent()
+        }
+
+        kotlinScript {
+            fun testItOut(capitalize: Boolean): String {
+                return if (capitalize) "CREATE TAG" else "Create tag"
+            }
+            name = "Kotlin Script"
+            print(testItOut(false))
         }
     }
 
