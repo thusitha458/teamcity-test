@@ -79,7 +79,7 @@ object GitTags : BuildType({
 
                 val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
 
-                return if (capitalize) "CREATE TAG ()" else "Create tag"
+                return if (capitalize) "CREATE TAG_ ($result)" else "Create tag"
             }
             name = testItOut(true)
             scriptContent = """
