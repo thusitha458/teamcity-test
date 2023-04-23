@@ -88,9 +88,10 @@ object GitTags : BuildType({
                     return client.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
                         
-                        return@use gson
-                            .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
-                            .toList()
+//                        return@use gson
+//                            .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
+//                            .toList()
+                          return@use listOf(GithubTag("refs/tags/2023.1703"), GithubTag("refs/tags/2023.1702"))
                     }
                 }
                 
@@ -121,7 +122,7 @@ object GitTags : BuildType({
                         }
                     }
                     
-                    val newVersion = versionSuffix + buildNumber
+                    val newVersion = versionPrefix + buildNumber
                     println(newVersion)
                 }
                 
