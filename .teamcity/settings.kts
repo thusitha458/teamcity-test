@@ -112,7 +112,7 @@ object GitTags : BuildType({
         script {
             name = "Create Tag"
             scriptContent = """
-                echo "Custom script"
+                echo "From Kotlin"
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
