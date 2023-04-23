@@ -65,6 +65,10 @@ object GitTags : BuildType({
                 
                 import okhttp3.*;
                 import com.google.gson.Gson;
+                import java.util.TimeZone;
+                import java.util.Date;
+                import java.util.Locale;
+                import java.util.Calendar;
                 
                 val githubToken = args[0];
                 val client = OkHttpClient()
@@ -73,6 +77,14 @@ object GitTags : BuildType({
                 data class GithubTag (
                     val ref: String
                 )
+                
+                fun getVersion(): String {
+                    val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
+                    cal.setTime(Date())
+                    val year = cal.get(Calendar.YEAR)
+                    val week = cal.get(Calendar.WEEK_OF_YEAR)
+                    return "${'$'}year.${'$'}week"
+                }
                 
                 fun run() {
                     val request = Request.Builder()
@@ -86,6 +98,7 @@ object GitTags : BuildType({
                         
                         val tags: List<GithubTag> = gson.fromJson(response.body!!.string() , Array<GithubTag>::class.java).toList()
                         println(tags[0].ref)
+                        println(getVersion())
                     }
                 }
                 
