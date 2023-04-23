@@ -55,6 +55,7 @@ object GitTags : BuildType({
             """.trimIndent()
         }
         kotlinScript {
+            name = "Kotlin FTW"
             content = """
                 #!/usr/bin/env kotlin
                 
@@ -63,11 +64,14 @@ object GitTags : BuildType({
                 
                 import okhttp3.*;
                 
+                val githubToken = args[0];
                 val client = OkHttpClient()
                 
                 fun run() {
                     val request = Request.Builder()
                         .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
+                        .header("X-GitHub-Api-Version", "2022-11-28")
+                        .header("Authorization", "Bearer ${'$'}githubToken")
                         .build()
                     
                     client.newCall(request).execute().use { response ->
@@ -79,6 +83,7 @@ object GitTags : BuildType({
                 
                 run()
             """.trimIndent()
+            arguments = "%env.GITHUB_TOKEN%"
         }
     }
 
