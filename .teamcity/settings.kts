@@ -64,7 +64,7 @@ object GitTags : BuildType({
                 @file:DependsOn("com.google.code.gson:gson:2.8.6")
                 
                 import okhttp3.*;
-                import gson.Gson;
+                import com.google.gson.Gson;
                 
                 val githubToken = args[0];
                 val client = OkHttpClient()
