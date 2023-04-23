@@ -99,11 +99,11 @@ object GitTags : BuildType({
                 return result
             }
 
-            val res = getVal()
+            val res = getVal().get()
 
             name = "Kotlin script"
             content = """
-                print(${res.get()})
+                print($res)
             """.trimIndent()
         }
     }
