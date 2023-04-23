@@ -1,5 +1,6 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
+import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -51,6 +52,30 @@ object GitTags : BuildType({
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
                                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
+            """.trimIndent()
+        }
+        kotlinScript {
+            content = """
+                #!/usr/bin/env kotlin
+                
+                @file:Repository("https://repo1.maven.org/maven2/")
+                @file:DependsOn("com.squareup.okhttp3:okhttp:4.9.1")
+                
+                import okhttp3.*;
+                
+                val client = OkHttpClient()
+                
+                fun run() {
+                    val request = Request.Builder()
+                        .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
+                        .build()
+                    
+                    client.newCall(request).execute().use {
+                        if (!response.isSuccessful) throw new java.io.IOException("Unexpected code ${'$'}response")
+                        
+                        println(response.body!!.string())
+                    }
+                }
             """.trimIndent()
         }
     }
