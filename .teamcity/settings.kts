@@ -63,7 +63,7 @@ object GitTags : BuildType({
 //                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 //                println(response)
 
-                val value = URL("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags").openConnection().apply {
+                val value = URL("https://www.google.com").openConnection().apply {
                     readTimeout = 800
                     connectTimeout = 200
                     setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
