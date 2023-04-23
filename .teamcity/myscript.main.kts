@@ -22,11 +22,11 @@ fun getTagsFromGithub(): List<GithubTag> {
     val request = Request.Builder()
         .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
         .header("X-GitHub-Api-Version", "2022-11-28")
-        .header("Authorization", "Bearer ${'$'}githubToken")
+        .header("Authorization", "Bearer $githubToken")
         .build()
 
     return client.newCall(request).execute().use { response ->
-        if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
+        if (!response.isSuccessful) throw java.io.IOException("Unexpected code $response")
 
         return@use gson
             .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
@@ -39,7 +39,7 @@ fun getVersionPrefix(): String {
     cal.setTime(Date())
     val year = cal.get(Calendar.YEAR)
     val week = cal.get(Calendar.WEEK_OF_YEAR)
-    return "${'$'}year.${'$'}week"
+    return "$year.$week"
 }
 
 fun calculateVersion(): String {
@@ -55,7 +55,7 @@ fun calculateVersion(): String {
             .maxOrNull() ?: 0
         buildNumber = (lastBuildNumber + 1).toString()
         if (buildNumber.length == 1) {
-            buildNumber = "0" + buildNumber
+            buildNumber = "0$buildNumber"
         }
     }
 
