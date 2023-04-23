@@ -70,8 +70,8 @@ object GitTags : BuildType({
                         .url("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags")
                         .build()
                     
-                    client.newCall(request).execute().use {
-                        if (!response.isSuccessful) throw new java.io.IOException("Unexpected code ${'$'}response")
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
                         
                         println(response.body!!.string())
                     }
