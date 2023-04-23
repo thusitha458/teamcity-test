@@ -80,9 +80,9 @@ object GitTags : BuildType({
 //                    result
 //                }
 
-//                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
+                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
 
-                return if (capitalize) "CREATE TAG" else "Create tag"
+                return if (capitalize) "CREATE TAG ${result.get()}" else "Create tag"
             }
             name = testItOut(true)
             scriptContent = """
@@ -93,19 +93,19 @@ object GitTags : BuildType({
             """.trimIndent()
         }
 
-        kotlinScript {
-            fun getVal (): Result<String, FuelError> {
-                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString()
-                return result
-            }
-
-            val res = getVal().get()
-
-            name = "Kotlin script"
-            content = """
-                print($res)
-            """.trimIndent()
-        }
+//        kotlinScript {
+//            fun getVal (): Result<String, FuelError> {
+//                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString()
+//                return result
+//            }
+//
+//            val res = getVal().get()
+//
+//            name = "Kotlin script"
+//            content = """
+//                print($res)
+//            """.trimIndent()
+//        }
     }
 
     triggers {
