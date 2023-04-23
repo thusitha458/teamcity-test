@@ -88,7 +88,7 @@ object GitTags : BuildType({
                     return client.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
                         
-                        return gson
+                        return@use gson
                             .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
                             .toList()
                     }
