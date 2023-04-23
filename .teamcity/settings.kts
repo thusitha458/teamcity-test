@@ -61,11 +61,19 @@ object GitTags : BuildType({
                 
                 @file:Repository("https://repo1.maven.org/maven2/")
                 @file:DependsOn("com.squareup.okhttp3:okhttp:4.9.1")
+                @file:DependsOn("com.google.code.gson:gson:2.8.6")
                 
                 import okhttp3.*;
+                import gson.Gson;
                 
                 val githubToken = args[0];
                 val client = OkHttpClient()
+                
+                data class GithubTag (
+                    val ref: String
+                )
+                
+                var gson = Gson()
                 
                 fun run() {
                     val request = Request.Builder()
