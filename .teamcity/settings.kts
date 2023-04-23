@@ -114,7 +114,6 @@ object GitTags : BuildType({
                         val temp = tagsWithSameVersionPrefix
                             .map { it.replace(versionPrefix, "").toIntOrNull() }
                             .filter { it != null && it is Int }
-                            .maxOrNull()
                         println(temp)
                     
                         val lastBuildNumber = tagsWithSameVersionPrefix
