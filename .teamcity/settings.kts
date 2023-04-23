@@ -1,7 +1,10 @@
+import com.fasterxml.jackson.databind.ObjectMapper
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
+import java.net.URL
+
 //import java.net.URI
 //import java.net.http.HttpClient
 //import java.net.http.HttpRequest
@@ -60,7 +63,19 @@ object GitTags : BuildType({
 //                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 //                println(response)
 
-                return if (capitalize) "CREATE TAG" else "Create tag"
+                val value = URL("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags").openConnection().apply {
+                    readTimeout = 800
+                    connectTimeout = 200
+                    setRequestProperty("X-GitHub-Api-Version", "2022-11-28")
+                    setRequestProperty("Authorization", "Bearer %env.GITHUB_TOKEN%")
+                }.getInputStream().use {
+                    val result = ObjectMapper().readTree(it).map { node ->
+                        node.get("ref").asText()
+                    }
+                    result
+                }
+
+                return if (capitalize) "CREATE TAG ($value)" else "Create tag"
             }
             name = testItOut(true)
             scriptContent = """
