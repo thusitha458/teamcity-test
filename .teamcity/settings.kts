@@ -1,4 +1,6 @@
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.httpGet
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
@@ -74,6 +76,8 @@ object GitTags : BuildType({
 //                    }
 //                    result
 //                }
+
+                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
 
                 return if (capitalize) "CREATE TAG ()" else "Create tag"
             }
