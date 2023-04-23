@@ -1,12 +1,11 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
+//import java.net.URI
+//import java.net.http.HttpClient
+//import java.net.http.HttpRequest
+//import java.net.http.HttpResponse
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -51,15 +50,15 @@ object GitTags : BuildType({
     steps {
         script {
             fun testItOut(capitalize: Boolean): String {
-                val client = HttpClient.newBuilder().build()
-                val request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags"))
-                    .header("X-GitHub-Api-Version", "2022-11-28")
-                    .header("Authorization", "Bearer %env.GITHUB_TOKEN%")
-                    .build()
-
-                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-                println(response)
+//                val client = HttpClient.newBuilder().build()
+//                val request = HttpRequest.newBuilder()
+//                    .uri(URI.create("https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags"))
+//                    .header("X-GitHub-Api-Version", "2022-11-28")
+//                    .header("Authorization", "Bearer %env.GITHUB_TOKEN%")
+//                    .build()
+//
+//                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+//                println(response)
 
                 return if (capitalize) "CREATE TAG" else "Create tag"
             }
