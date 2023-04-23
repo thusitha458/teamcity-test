@@ -68,12 +68,11 @@ object GitTags : BuildType({
                 
                 val githubToken = args[0];
                 val client = OkHttpClient()
+                val gson = Gson()
                 
                 data class GithubTag (
                     val ref: String
                 )
-                
-                var gson = Gson()
                 
                 fun run() {
                     val request = Request.Builder()
@@ -85,7 +84,8 @@ object GitTags : BuildType({
                     client.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
                         
-                        println(response.body!!.string())
+                        val tags: List<GithubTag> = gson.fromJson(response.body!!.string() , Array<GithubTag>::class.java).toList()
+                        println(tags[0].ref)
                     }
                 }
                 
