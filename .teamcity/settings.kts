@@ -94,7 +94,7 @@ object GitTags : BuildType({
                     }
                 }
                 
-                fun getVersionSuffix(): String {
+                fun getVersionPrefix(): String {
                     val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
                     cal.setTime(Date())
                     val year = cal.get(Calendar.YEAR)
@@ -103,19 +103,19 @@ object GitTags : BuildType({
                 }
                 
                 fun run() {
-                    val versionSuffix = getVersionSuffix()
-                    val tagsWithSameVersionSuffix = getTagsFromGithub().map {
+                    val versionPrefix = getVersionPrefix()
+                    val tagsWithSameVersionPrefix = getTagsFromGithub().map {
                         it.ref.replace("refs/tags/", "")
-                    }.filter { it.startsWith(versionSuffix) }
-                    println(tagsWithSameVersionSuffix)
+                    }.filter { it.startsWith(versionPrefix) }
+                    println(tagsWithSameVersionPrefix)
                     
                     var buildNumber = "01"
-                    if (!tagsWithSameVersionSuffix.isNullOrEmpty()) {
-                        var lastBuildNumber = tagsWithSameVersionSuffix
-                            .map { it.replace(versionSuffix, "").toIntOrNull() }
+                    if (!tagsWithSameVersionPrefix.isNullOrEmpty()) {
+                        val lastBuildNumber = tagsWithSameVersionPrefix
+                            .map { it.replace(versionPrefix, "").toIntOrNull() }
                             .filter { it != null }
                             .first() ?: 0
-                        buildNumber = (lastBuildNumber++).toString()
+                        buildNumber = (lastBuildNumber + 1).toString()
                         if (buildNumber.length == 1) {
                             buildNumber = "0" + buildNumber
                         }
