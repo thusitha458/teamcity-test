@@ -45,7 +45,8 @@ object GitTags : BuildType({
 
     steps {
         script {
-            name = "Create Tag"
+            val test = "Create tag"
+            name = test
             scriptContent = """
                 echo "Team city"
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
