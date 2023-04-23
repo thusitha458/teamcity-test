@@ -95,6 +95,10 @@ object DockerImages : BuildType({
     }
 })
 
+fun timeTwoOf(x: Int): Int {
+    return 2 * x
+}
+
 object GitTags : BuildType({
     name = "Git Tags"
 
@@ -110,9 +114,11 @@ object GitTags : BuildType({
 
     steps {
         script {
+            val x = timeTwoOf(5)
+
             name = "Create Tag"
             scriptContent = """
-                echo "From Kotlin"
+                echo "From Kotlin $x"
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
