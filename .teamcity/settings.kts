@@ -45,8 +45,10 @@ object GitTags : BuildType({
 
     steps {
         script {
-            val test = "Create tag"
-            name = test
+            fun testItOut(capitalize: Boolean): String {
+                return if (capitalize) "CREATE TAG" else "Create tag"
+            }
+            name = testItOut(true)
             scriptContent = """
                 echo "Team city"
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
