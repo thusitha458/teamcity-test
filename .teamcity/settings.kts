@@ -96,8 +96,14 @@ object GitTags : BuildType({
                     client.newCall(request).execute().use { response ->
                         if (!response.isSuccessful) throw java.io.IOException("Unexpected code ${'$'}response")
                         
-                        val tags: List<GithubTag> = gson.fromJson(response.body!!.string() , Array<GithubTag>::class.java).toList()
-                        println(tags[0].ref)
+                        val tags: List<String> = gson
+                            .fromJson(response.body!!.string() , Array<GithubTag>::class.java)
+                            .toList()
+                            .map {
+                                it.ref.replace("refs/tags/", "")
+                            }
+                        
+                        println(tags[0])
                         println(getVersion())
                     }
                 }
