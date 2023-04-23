@@ -75,7 +75,7 @@ object GitTags : BuildType({
                     result
                 }
 
-                return if (capitalize) "CREATE TAG (${value[0]})" else "Create tag"
+                return if (capitalize) "CREATE TAG (${value})" else "Create tag"
             }
             name = testItOut(true)
             scriptContent = """
