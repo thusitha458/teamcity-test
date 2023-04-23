@@ -3,6 +3,7 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
+import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import java.net.URL
@@ -77,9 +78,9 @@ object GitTags : BuildType({
 //                    result
 //                }
 
-                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
+//                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString();
 
-                return if (capitalize) "CREATE TAG_ ($result)" else "Create tag"
+                return if (capitalize) "CREATE TAG" else "Create tag"
             }
             name = testItOut(true)
             scriptContent = """
@@ -87,6 +88,14 @@ object GitTags : BuildType({
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
                                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
+            """.trimIndent()
+        }
+
+        kotlinScript {
+            name = "Kotlin script"
+            content = """
+                val (req, res, result) = "https://publicobject.com/helloworld.txt".httpGet().responseString()
+                print(result)
             """.trimIndent()
         }
     }
