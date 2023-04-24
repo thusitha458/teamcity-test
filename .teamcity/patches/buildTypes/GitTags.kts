@@ -9,6 +9,11 @@ To apply the patch, change the buildType with id = 'GitTags'
 accordingly, and delete the patch script.
 */
 changeBuildType(RelativeId("GitTags")) {
+    check(maxRunningBuilds == 0) {
+        "Unexpected option value: maxRunningBuilds = $maxRunningBuilds"
+    }
+    maxRunningBuilds = 1
+
     vcs {
 
         check(checkoutMode == CheckoutMode.AUTO) {
