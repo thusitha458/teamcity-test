@@ -1,5 +1,6 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
+import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -38,6 +39,7 @@ object GitTags : BuildType({
     params {
         password("env.GITHUB_TOKEN", "credentialsJSON:643c4fa5-223a-4e42-a7dd-2dfbbd35c3a7")
         param("env.CURRENT_VERSION", "0.0.0")
+        param("env.NEXT_VERSION", "0.0.0")
     }
 
     vcs {
@@ -52,9 +54,42 @@ object GitTags : BuildType({
                 echo "##teamcity[setParameter name='env.CURRENT_VERSION' value='${'$'}CURRENT_VERSION']"
             """.trimIndent()
         }
+        kotlinScript {
+            name = "Calculate next version"
+            content = """
+                #!/usr/bin/env kotlin
+                
+                import java.util.TimeZone;
+                import java.util.Date;
+                import java.util.Locale;
+                import java.util.Calendar;
+                                
+                fun getVersionPrefix(): String {
+                    val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
+                    cal.setTime(Date())
+                    val year = cal.get(Calendar.YEAR)
+                    val week = cal.get(Calendar.WEEK_OF_YEAR)
+                    return "${'$'}year.${'$'}week"
+                }
+                
+                val currentVersion = args[0]
+                val nextVersionPrefix = getVersionPrefix()
+                if (currentVersion.startsWith(nextVersionPrefix)) {
+                    val currentBuildNo = currentVersion.replace("${'$'}nextVersionPrefix.", "").toIntOrNull() ?: 0
+                    val nextBuildNo = currentBuildNo + 1
+                    print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
+                } else {
+                    print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.0']")
+                }
+            """.trimIndent()
+            arguments = "%env.CURRENT_VERSION%"
+        }
         script {
-            name = "Read version"
-            scriptContent = """echo "Next version is %env.CURRENT_VERSION%""""
+            name = "Read versions"
+            scriptContent = """
+                echo "Current version is %env.CURRENT_VERSION%"
+                echo "Next version is %env.NEXT_VERSION%"
+            """.trimIndent()
         }
     }
 
