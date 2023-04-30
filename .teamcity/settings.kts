@@ -89,7 +89,6 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
-                git config user.name "Teamcity"
                 npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
@@ -100,10 +99,6 @@ object GitTags : BuildType({
             triggerRules = """
                 -:comment=[skip ci]:**
                 +:**
-            """.trimIndent()
-            branchFilter = """
-                +:main
-                +:release/*
             """.trimIndent()
         }
     }
