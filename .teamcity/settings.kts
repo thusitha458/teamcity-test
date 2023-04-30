@@ -53,13 +53,14 @@ object GitTags : BuildType({
                 curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
                                 --header 'X-GitHub-Api-Version: 2022-11-28' \
                                 --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
+                echo "##teamcity[setParameter name='env.NEXT_VERSION' value='"2.2.22.2"']"
             """.trimIndent()
         }
-        kotlinFile {
-            name = "Calculate version"
-            path = ".teamcity/myscript.main.kts"
-            arguments = "%env.GITHUB_TOKEN%"
-        }
+//        kotlinFile {
+//            name = "Calculate version"
+//            path = ".teamcity/myscript.main.kts"
+//            arguments = "%env.GITHUB_TOKEN%"
+//        }
         script {
             name = "Read version"
             scriptContent = """
