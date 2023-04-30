@@ -96,10 +96,7 @@ object GitTags : BuildType({
 
     triggers {
         vcs {
-            triggerRules = """
-                -:comment=[skip ci]:**
-                +:**
-            """.trimIndent()
+//            triggerRules = "-:comment=[skip ci]:**"
         }
     }
 
