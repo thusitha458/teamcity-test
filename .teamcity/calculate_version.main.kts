@@ -65,6 +65,7 @@ fun calculateVersion(): String {
 fun run() {
     val version = calculateVersion()
     print(version)
+    print("##teamcity[setParameter name='env.NEXT_VERSION' value='$version']")
 }
 
 run()

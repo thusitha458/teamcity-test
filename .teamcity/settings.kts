@@ -56,9 +56,15 @@ object GitTags : BuildType({
             """.trimIndent()
         }
         kotlinFile {
-            name = "Kotlin FTW"
-            path = ".teamcity/myscript.main.kts"
+            name = "Calculate version"
+            path = ".teamcity/calculate_version.main.kts"
             arguments = "%env.GITHUB_TOKEN%"
+        }
+        script {
+            name = "Read version"
+            scriptContent = """
+                echo "Next version is %env.NEXT_VERSION%"
+            """.trimIndent()
         }
     }
 
