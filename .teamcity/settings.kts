@@ -37,7 +37,7 @@ object GitTags : BuildType({
 
     params {
         password("env.GITHUB_TOKEN", "credentialsJSON:643c4fa5-223a-4e42-a7dd-2dfbbd35c3a7")
-        param("env.NEXT_VERSION", "0.0.0")
+        param("env.CURRENT_VERSION", "0.0.0")
     }
 
     vcs {
@@ -46,18 +46,15 @@ object GitTags : BuildType({
 
     steps {
         script {
-            name = "Create Tag"
+            name = "Read current version"
             scriptContent = """
-                echo "Team city"
-                curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
-                                --header 'X-GitHub-Api-Version: 2022-11-28' \
-                                --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
-                echo "##teamcity[setParameter name='env.NEXT_VERSION' value='"2.2.22.2"']"
+                CURRENT_VERSION=$(yarn app:version)
+                echo "##teamcity[setParameter name='env.CURRENT_VERSION' value='${'$'}CURRENT_VERSION']"
             """.trimIndent()
         }
         script {
             name = "Read version"
-            scriptContent = """echo "Next version is %env.NEXT_VERSION%""""
+            scriptContent = """echo "Next version is %env.CURRENT_VERSION%""""
         }
     }
 
