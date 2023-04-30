@@ -49,7 +49,7 @@ object GitTags : BuildType({
             name = "Read current version"
             scriptContent = """
                 CURRENT_VERSION=$(yarn app:version)
-                echo "${'$'}"CURRENT_VERSION"
+                echo "${'$'}CURRENT_VERSION"
                 echo "##teamcity[setParameter name='env.CURRENT_VERSION' value='${'$'}CURRENT_VERSION']"
             """.trimIndent()
         }
