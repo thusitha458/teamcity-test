@@ -85,10 +85,11 @@ object GitTags : BuildType({
             arguments = "%env.CURRENT_VERSION%"
         }
         script {
-            name = "Read versions"
+            name = "Update version"
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
+                npm version %env.NEXT_VERSION%
             """.trimIndent()
         }
     }
