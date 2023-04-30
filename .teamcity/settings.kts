@@ -37,6 +37,7 @@ object GitTags : BuildType({
 
     params {
         password("env.GITHUB_TOKEN", "credentialsJSON:643c4fa5-223a-4e42-a7dd-2dfbbd35c3a7")
+        param("env.NEXT_VERSION", "0.0.0")
     }
 
     vcs {
