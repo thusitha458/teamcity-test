@@ -15,8 +15,8 @@ changeBuildType(RelativeId("GitTags")) {
             "Unexpected option value: branchFilter = $branchFilter"
         }
         branchFilter = """
-            +:main
-            +:release/*
+            +:refs/heads/main
+            +:refs/heads/release/*
         """.trimIndent()
     }
 }
