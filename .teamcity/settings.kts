@@ -1,7 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinFile
-import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinScript
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -56,11 +54,6 @@ object GitTags : BuildType({
                 echo "##teamcity[setParameter name='env.NEXT_VERSION' value='"2.2.22.2"']"
             """.trimIndent()
         }
-//        kotlinFile {
-//            name = "Calculate version"
-//            path = ".teamcity/myscript.main.kts"
-//            arguments = "%env.GITHUB_TOKEN%"
-//        }
         script {
             name = "Read version"
             scriptContent = """
