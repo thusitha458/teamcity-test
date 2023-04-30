@@ -57,7 +57,7 @@ object GitTags : BuildType({
         }
         kotlinFile {
             name = "Calculate version"
-            path = ".teamcity/calculate_version.main.kts"
+            path = ".teamcity/myscript.main.kts"
             arguments = "%env.GITHUB_TOKEN%"
         }
         script {
