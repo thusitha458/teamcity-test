@@ -1,6 +1,9 @@
 package patches.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.*
+import jetbrains.buildServer.configs.kotlin.buildSteps.KotlinScriptFileBuildStep
+import jetbrains.buildServer.configs.kotlin.buildSteps.kotlinFile
+import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.ui.*
 
 /*
@@ -20,5 +23,28 @@ changeBuildType(RelativeId("GitTags")) {
             "Unexpected option value: checkoutMode = $checkoutMode"
         }
         checkoutMode = CheckoutMode.ON_AGENT
+    }
+
+    expectSteps {
+        script {
+            name = "Create Tag"
+            scriptContent = """
+                echo "Team city"
+                curl --location 'https://api.github.com/repos/thusitha458/teamcity-test/git/refs/tags' \
+                                --header 'X-GitHub-Api-Version: 2022-11-28' \
+                                --header 'Authorization: Bearer %env.GITHUB_TOKEN%'
+            """.trimIndent()
+        }
+        kotlinFile {
+            name = "Kotlin FTW"
+            path = ".teamcity/myscript.main.kts"
+            arguments = "%env.GITHUB_TOKEN%"
+        }
+    }
+    steps {
+        update<KotlinScriptFileBuildStep>(1) {
+            name = "Calculate version"
+            clearConditions()
+        }
     }
 }
