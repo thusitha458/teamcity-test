@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "mocha tests/**/*.js",
-    "postversion": "git push && git push --tags",
-    "app:version": "echo $npm_package_version"
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",

@@ -48,8 +48,7 @@ object GitTags : BuildType({
         script {
             name = "Read current version"
             scriptContent = """
-                CURRENT_VERSION=$(yarn app:version)
-                echo "${'$'}CURRENT_VERSION"
+                CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
                 echo "##teamcity[setParameter name='env.CURRENT_VERSION' value='${'$'}CURRENT_VERSION']"
             """.trimIndent()
         }
