@@ -1,6 +1,6 @@
 {
   "name": "teamcity-test",
-  "version": "2023.19.49",
+  "version": "2023.19.50",
   "description": "",
   "main": "index.js",
   "scripts": {
