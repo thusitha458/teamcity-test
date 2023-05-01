@@ -50,7 +50,7 @@ object GitTags : BuildType({
         script {
             name = "Check for new changes"
             scriptContent = """
-                echo "##teamcity[buildStop comment='No changes found' readdToQueue='false']"
+                echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
             """.trimIndent()
         }
         script {
