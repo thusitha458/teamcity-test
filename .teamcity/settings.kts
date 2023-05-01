@@ -47,12 +47,12 @@ object GitTags : BuildType({
     }
 
     steps {
-        script {
-            name = "Check for new changes"
-            scriptContent = """
-                echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
-            """.trimIndent()
-        }
+//        script {
+//            name = "Check for new changes"
+//            scriptContent = """
+//                echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
+//            """.trimIndent()
+//        }
         script {
             name = "Read current version"
             scriptContent = """
