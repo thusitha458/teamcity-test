@@ -105,7 +105,7 @@ object GitTags : BuildType({
                     }
                 } else if (currentVersion.startsWith(nextVersionPrefix)) {
                     // e.g.: 2023.20.100, 2023.20.200
-                    val currentBuildNo = currentVersion.replace("${'$'}nextVersionPrefix.", "").toIntOrNull() ?: 0
+                    val currentBuildNo = currentVersion.replace("${'$'}nextVersionPrefix.", "").toIntOrNull() ?: 10000
                     val nextBuildNo = ((currentBuildNo + 100) / 100) * 100
                     print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
                 } else {
