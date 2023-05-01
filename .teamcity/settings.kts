@@ -48,6 +48,12 @@ object GitTags : BuildType({
 
     steps {
         script {
+            name = "Check for new changes"
+            scriptContent = """
+                echo "##teamcity[buildStop comment='No changes found' readdToQueue='false']"
+            """.trimIndent()
+        }
+        script {
             name = "Read current version"
             scriptContent = """
                 CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
@@ -96,9 +102,6 @@ object GitTags : BuildType({
 
     triggers {
         vcs {
-            triggerRules = """
-                +:comment=^(?![skip ci])(.*):**
-            """.trimIndent()
         }
     }
 
