@@ -50,8 +50,8 @@ object GitTags : BuildType({
         script {
             name = "Check for new changes"
             scriptContent = """
-                skip_count=$(git log --oneline -1 | grep -c -E "\[skip ci\]")
-                if [ "${'$'}skip_count" -ne 1 ]; then
+                count=$(git log --oneline -1 | grep -c -E "\[skip ci\]")
+                if [ "${'$'}count" -eq 1 ]; then
                     echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
                 fi
             """.trimIndent()
