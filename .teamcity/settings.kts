@@ -95,7 +95,6 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
-                npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
     }
