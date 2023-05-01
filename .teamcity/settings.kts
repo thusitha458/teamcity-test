@@ -50,7 +50,7 @@ object GitTags : BuildType({
         script {
             name = "Check for new changes"
             scriptContent = """
-                count=$(git log --oneline -1 | grep -c -E "\[skip ci\]")
+                count=$(git log --oneline -1 | grep -c -E "skipci")
                 if [ "${'$'}count" -eq 1 ]; then
                     echo "##teamcity[buildStop comment='Skipping the CI step.' readdToQueue='false']"
                 fi
@@ -124,13 +124,14 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
-                npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
+                npm version %env.NEXT_VERSION% -m "[skipci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
     }
 
     triggers {
         vcs {
+            triggerRules="-:comment=(?i:skipci):**"
             branchFilter = """
                 +:main
                 +:release/*
