@@ -86,10 +86,13 @@ object GitTags : BuildType({
                     val versionParts = currentVersion.split(".")
                     val currentVersionEnd = versionParts.subList(2, versionParts.size).joinToString(".")
                     val versionEndParts = currentVersionEnd.split("-")
-                    val nextBuildNo = (versionEndParts[0].toIntOrNull() ?: 0) + 1
+                    var nextBuildNo = versionEndParts[0].toIntOrNull() ?: 0
                     
-                    if (nextBuildNo % 100 >= 99) {
+                    if (nextBuildNo % 100 == 98 || nextBuildNo % 100 == 99) {
                         // e.g.: 2023.20.199-1, 2023.20.199-3
+                        if (nextBuildNo % 100 == 98) {
+                            nextBuildNo = nextBuildNo + 1
+                        }
                         var nextSecondaryBuildNo = 1
                         if (versionEndParts.size > 1) {
                             val currentSecondaryBuildNo = versionEndParts
@@ -101,6 +104,7 @@ object GitTags : BuildType({
                         print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo-${'$'}nextSecondaryBuildNo']")
                     } else {
                         // e.g.: 2023.20.101, 2023.20.198
+                        nextBuildNo = nextBuildNo + 1
                         print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
                     }
                 } else if (currentVersion.startsWith(nextVersionPrefix)) {
