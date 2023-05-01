@@ -10,7 +10,7 @@ describe("Teamcity Test", () => {
         if (5 === 5) {
             done();
         } else {
-            done(new Error("Not equal!!!"));
+            done(new Error("Not equal!"));
         }
     })
 });
