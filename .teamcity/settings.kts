@@ -88,7 +88,7 @@ object GitTags : BuildType({
                     val versionEndParts = currentVersionEnd.split("-")
                     val nextBuildNo = (versionEndParts[0].toIntOrNull() ?: 0) + 1
                     
-                    if (nextBuildNo >= 99) {
+                    if (nextBuildNo % 100 >= 99) {
                         // e.g.: 2023.20.199-1, 2023.20.199-3
                         var nextSecondaryBuildNo = 1
                         if (versionEndParts.size > 1) {
