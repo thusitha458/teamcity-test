@@ -52,7 +52,7 @@ object GitTags : BuildType({
             scriptContent = """
                 count=$(git log --oneline -1 | grep -c -E "\[skip ci\]")
                 if [ "${'$'}count" -eq 1 ]; then
-                    echo "##teamcity[buildStop comment='The last commit has [skip ci] in its message. Skipping the CI step.' readdToQueue='false']"
+                    echo "##teamcity[buildStop comment='Skipping the CI step.' readdToQueue='false']"
                 fi
             """.trimIndent()
         }
