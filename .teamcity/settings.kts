@@ -48,15 +48,6 @@ object GitTags : BuildType({
 
     steps {
         script {
-            name = "Check for new changes"
-            scriptContent = """
-                count=$(git log --oneline -1 | grep -c -E "skip ci")
-                if [ "${'$'}count" -eq 1 ]; then
-                    echo "##teamcity[buildStop comment='Skipping the CI step.' readdToQueue='false']"
-                fi
-            """.trimIndent()
-        }
-        script {
             name = "Read current version"
             scriptContent = """
                 CURRENT_VERSION=${'$'}(cat package.json | grep version | head -1 | awk -F: '{ print ${'$'}2 }' | sed 's/[",]//g')
@@ -95,20 +86,27 @@ object GitTags : BuildType({
                     val versionParts = currentVersion.split(".")
                     val currentVersionEnd = versionParts.subList(2, versionParts.size).joinToString(".")
                     val versionEndParts = currentVersionEnd.split("-")
-                    val nextBuildNo = versionEndParts[0]
+                    val nextBuildNo = (versionEndParts[0].toIntOrNull() ?: 0) + 1
                     
-                    var nextSecondaryBuildNo = 1
-                    if (versionEndParts.size > 1) {
-                        val currentSecondaryBuildNo = versionEndParts
-                            .subList(1, versionEndParts.size)
-                            .joinToString("-")
-                            .toIntOrNull() ?: 0
-                        nextSecondaryBuildNo = currentSecondaryBuildNo + 1
+                    if (nextBuildNo >= 99) {
+                        // e.g.: 2023.20.199-1, 2023.20.199-3
+                        var nextSecondaryBuildNo = 1
+                        if (versionEndParts.size > 1) {
+                            val currentSecondaryBuildNo = versionEndParts
+                                .subList(1, versionEndParts.size)
+                                .joinToString("-")
+                                .toIntOrNull() ?: 0
+                            nextSecondaryBuildNo = currentSecondaryBuildNo + 1
+                        }
+                        print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo-${'$'}nextSecondaryBuildNo']")
+                    } else {
+                        // e.g.: 2023.20.101, 2023.20.198
+                        print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
                     }
-                    print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo-${'$'}nextSecondaryBuildNo']")
                 } else if (currentVersion.startsWith(nextVersionPrefix)) {
+                    // e.g.: 2023.20.100, 2023.20.200
                     val currentBuildNo = currentVersion.replace("${'$'}nextVersionPrefix.", "").toIntOrNull() ?: 0
-                    val nextBuildNo = currentBuildNo + 1
+                    val nextBuildNo = ((currentBuildNo + 100) / 100) * 100
                     print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
                 } else {
                     print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.0']")
