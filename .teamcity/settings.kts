@@ -47,12 +47,15 @@ object GitTags : BuildType({
     }
 
     steps {
-//        script {
-//            name = "Check for new changes"
-//            scriptContent = """
-//                echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
-//            """.trimIndent()
-//        }
+        script {
+            name = "Check for new changes"
+            scriptContent = """
+                skip_count=$(git log --oneline -1 | grep -c -E "\[skip ci\]")
+                if [ "${'$'}skip_count" -ne 1 ]; then
+                    echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
+                fi
+            """.trimIndent()
+        }
         script {
             name = "Read current version"
             scriptContent = """
@@ -95,6 +98,7 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
+                npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
     }
