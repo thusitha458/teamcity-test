@@ -47,6 +47,12 @@ object GitTags : BuildType({
     }
 
     steps {
+//        script {
+//            name = "Check for new changes"
+//            scriptContent = """
+//                echo "##teamcity[buildStop comment='No changes found!' readdToQueue='false']"
+//            """.trimIndent()
+//        }
         script {
             name = "Read current version"
             scriptContent = """
@@ -89,17 +95,12 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
-                npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
     }
 
     triggers {
         vcs {
-            triggerRules = """
-                -:comment=[skip ci]:**
-                +:**
-            """.trimIndent()
         }
     }
 
