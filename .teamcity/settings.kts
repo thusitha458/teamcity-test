@@ -72,18 +72,41 @@ object GitTags : BuildType({
                 import java.util.Date;
                 import java.util.Locale;
                 import java.util.Calendar;
-                                
-                fun getVersionPrefix(): String {
-                    val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
-                    cal.setTime(Date())
-                    val year = cal.get(Calendar.YEAR)
-                    val week = cal.get(Calendar.WEEK_OF_YEAR)
-                    return "${'$'}year.${'$'}week"
-                }
                 
                 val currentVersion = args[0]
+                val branchName = args[1]
+                val isReleaseBranch = branchName.startsWith("release/")
+                
+                fun getVersionPrefix(): String {
+                    if (isReleaseBranch) {
+                        // we will be building the same version
+                        return currentVersion.split(".").subList(0, 2).joinToString(".")
+                    } else {
+                        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Stockholm"))
+                        cal.setTime(Date())
+                        val year = cal.get(Calendar.YEAR)
+                        val week = cal.get(Calendar.WEEK_OF_YEAR)
+                        return "${'$'}year.${'$'}week"
+                    }
+                }
+                
                 val nextVersionPrefix = getVersionPrefix()
-                if (currentVersion.startsWith(nextVersionPrefix)) {
+                if (isReleaseBranch) {
+                    val versionParts = currentVersion.split(".")
+                    val currentVersionEnd = versionParts.subList(2, versionParts.size).joinToString(".")
+                    val versionEndParts = currentVersionEnd.split("-")
+                    val nextBuildNo = versionEndParts[0]
+                    
+                    var nextSecondaryBuildNo = 1
+                    if (versionEndParts.size > 1) {
+                        val currentSecondaryBuildNo = versionEndParts
+                            .subList(1, versionEndParts.size)
+                            .joinToString("-")
+                            .toIntOrNull() ?: 0
+                        nextSecondaryBuildNo = currentSecondaryBuildNo + 1
+                    }
+                    print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo-${'$'}nextSecondaryBuildNo']")
+                } else if (currentVersion.startsWith(nextVersionPrefix)) {
                     val currentBuildNo = currentVersion.replace("${'$'}nextVersionPrefix.", "").toIntOrNull() ?: 0
                     val nextBuildNo = currentBuildNo + 1
                     print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.${'$'}nextBuildNo']")
@@ -91,7 +114,10 @@ object GitTags : BuildType({
                     print("##teamcity[setParameter name='env.NEXT_VERSION' value='${'$'}nextVersionPrefix.0']")
                 }
             """.trimIndent()
-            arguments = "%env.CURRENT_VERSION%"
+            arguments = """
+                %env.CURRENT_VERSION%
+                %teamcity.build.branch%
+            """.trimIndent()
         }
         script {
             name = "Update version"
