@@ -126,14 +126,14 @@ object GitTags : BuildType({
             scriptContent = """
                 echo "Current version is %env.CURRENT_VERSION%"
                 echo "Next version is %env.NEXT_VERSION%"
-                npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
+                GIT_COMMITTER_NAME=Teamcity npm version %env.NEXT_VERSION% -m "[skip ci] Bump version to %env.NEXT_VERSION%"
             """.trimIndent()
         }
     }
 
     triggers {
         vcs {
-            triggerRules="-:comment=(?i:skip ci):**"
+            triggerRules = "-:comment=(?i:skip ci):**"
             branchFilter = """
                 +:main
                 +:release/*
